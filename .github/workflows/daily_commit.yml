@@ -16,11 +16,14 @@ jobs:
       - name: Update Status File (23ds3000241@ds.study.iitm.ac.in)
         run: |
           echo "Last run: $(date)" >> status.log
-
+          
       - name: Commit and Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "23ds3000241@ds.study.iitm.ac.in"
           git add status.log
-          git commit -m "Automated commit: $(date)"
-          git push
+          git commit -m "Automated commit: $(date)" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git
+
